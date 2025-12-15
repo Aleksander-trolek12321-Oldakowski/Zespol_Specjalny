@@ -4,7 +4,6 @@ UAttributesComponent::UAttributesComponent()
 {
     PrimaryComponentTick.bCanEverTick = false;
 
-    // sensowne wartości domyślne
     MaxHP = 100.f;
     CurrentHP = MaxHP;
     Stamina = 100.f;
