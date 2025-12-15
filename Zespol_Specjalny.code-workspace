@@ -37,7 +37,7 @@
 					"Zespol_Specjalny",
 					"Win64",
 					"Debug",
-					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
+					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -54,7 +54,7 @@
 					"Zespol_Specjalny",
 					"Win64",
 					"Debug",
-					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
+					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -74,7 +74,7 @@
 					"Zespol_Specjalny",
 					"Win64",
 					"Debug",
-					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
+					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -145,7 +145,7 @@
 					"Zespol_Specjalny",
 					"Win64",
 					"Development",
-					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
+					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -162,7 +162,7 @@
 					"Zespol_Specjalny",
 					"Win64",
 					"Development",
-					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
+					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -415,7 +415,7 @@
 					"Zespol_SpecjalnyEditor",
 					"Win64",
 					"Development",
-					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
+					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -505,7 +505,7 @@
 			{
 				"name": "Launch Zespol_Specjalny (Development)",
 				"request": "launch",
-				"program": "E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny\\Binaries\\Win64\\UnrealGame.exe",
+				"program": "E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Binaries\\Win64\\UnrealGame.exe",
 				"preLaunchTask": "Zespol_Specjalny Win64 Development Build",
 				"args": [
 				],
@@ -600,7 +600,7 @@
 				"program": "E:\\unrealka\\UE_5.6\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
 				"preLaunchTask": "Zespol_SpecjalnyEditor Win64 Development Build",
 				"args": [
-					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny\\Zespol_Specjalny.uproject"
+					"E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny.uproject"
 				],
 				"cwd": "E:\\unrealka\\UE_5.6",
 				"stopAtEntry": false,
@@ -609,7 +609,7 @@
 				"visualizerFile": "E:\\unrealka\\UE_5.6\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
 				"sourceFileMap": {
 					"D:\\build\\++UE5\\Sync": "E:\\unrealka\\UE_5.6",
-					"Z:\\UEVFS\\Zespol_Specjalny": "E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny",
+					"Z:\\UEVFS\\Zespol_Specjalny": "E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny",
 					"Z:\\UEVFS\\Root": "E:\\unrealka\\UE_5.6"
 				}
 			},
@@ -622,7 +622,7 @@
 				"args": [
 					"-projectfiles",
 					"-vscode",
-					"-project=E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
+					"-project=E:\\unrealka\\Top-Down Shooter\\Zespol_Specjalny\\Zespol_Specjalny.uproject",
 					"-game",
 					"-engine",
 					"-dotnet"
