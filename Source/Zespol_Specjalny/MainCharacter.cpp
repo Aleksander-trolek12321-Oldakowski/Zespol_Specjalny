@@ -1,39 +1,39 @@
-#include "HeroCharacter.h"
-// Musimy do³¹czyæ nag³ówki komponentów, których u¿ywamy
+#include "MainCharacter.h"
+// Musimy doï¿½ï¿½czyï¿½ nagï¿½ï¿½wki komponentï¿½w, ktï¿½rych uï¿½ywamy
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Konstruktor
-AHeroCharacter::AHeroCharacter()
+AMainCharacter::AMainCharacter()
 {
-    // W³¹czamy Tick, jeœli potrzebny (czêsto mo¿na wy³¹czyæ dla optymalizacji, ale na razie zostawmy)
+    // Wï¿½ï¿½czamy Tick, jeï¿½li potrzebny (czï¿½sto moï¿½na wyï¿½ï¿½czyï¿½ dla optymalizacji, ale na razie zostawmy)
     PrimaryActorTick.bCanEverTick = true;
 
     // 1. Ustawienia postaci
-    // Nie chcemy, aby postaæ obraca³a siê razem z kamer¹ (w grach top-down kamera patrzy z góry, postaæ obraca siê myszk¹/klawiszami)
+    // Nie chcemy, aby postaï¿½ obracaï¿½a siï¿½ razem z kamerï¿½ (w grach top-down kamera patrzy z gï¿½ry, postaï¿½ obraca siï¿½ myszkï¿½/klawiszami)
     bUseControllerRotationPitch = false;
     bUseControllerRotationYaw = false;
     bUseControllerRotationRoll = false;
 
-    // Ustawiamy, by postaæ obraca³a siê w kierunku ruchu
+    // Ustawiamy, by postaï¿½ obracaï¿½a siï¿½ w kierunku ruchu
     GetCharacterMovement()->bOrientRotationToMovement = true;
     GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 
-    // 2. Tworzymy SpringArm (Wysiêgnik)
+    // 2. Tworzymy SpringArm (Wysiï¿½gnik)
     CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-    CameraBoom->SetupAttachment(RootComponent); // Przyczepiamy do korzenia postaci (kapsu³y)
+    CameraBoom->SetupAttachment(RootComponent); // Przyczepiamy do korzenia postaci (kapsuï¿½y)
 
-    // Ustawiamy wysiêgnik w tryb Top-Down
-    CameraBoom->SetUsingAbsoluteRotation(true); // Nie chcemy, by ramiê obraca³o siê, gdy postaæ siê przewraca
-    CameraBoom->TargetArmLength = 800.f; // Odleg³oœæ kamery od gracza (wysokoœæ)
-    CameraBoom->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f)); // Pochylenie kamery w dó³ o 60 stopni
-    CameraBoom->bDoCollisionTest = false; // ¯eby kamera nie przybli¿a³a siê "dziwnie", gdy wejdziemy pod drzewo
+    // Ustawiamy wysiï¿½gnik w tryb Top-Down
+    CameraBoom->SetUsingAbsoluteRotation(true); // Nie chcemy, by ramiï¿½ obracaï¿½o siï¿½, gdy postaï¿½ siï¿½ przewraca
+    CameraBoom->TargetArmLength = 800.f; // Odlegï¿½oï¿½ï¿½ kamery od gracza (wysokoï¿½ï¿½)
+    CameraBoom->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f)); // Pochylenie kamery w dï¿½ o 60 stopni
+    CameraBoom->bDoCollisionTest = false; // ï¿½eby kamera nie przybliï¿½aï¿½a siï¿½ "dziwnie", gdy wejdziemy pod drzewo
 
-    // 3. Tworzymy Kamerê
+    // 3. Tworzymy Kamerï¿½
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-    FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Przyczepiamy do koñca wysiêgnika
-    FollowCamera->bUsePawnControlRotation = false; // Kamera nie pod¹¿a za obrotem kontrolera
+    FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Przyczepiamy do koï¿½ca wysiï¿½gnika
+    FollowCamera->bUsePawnControlRotation = false; // Kamera nie podï¿½ï¿½a za obrotem kontrolera
 
     // 4. Inicjalizacja statystyk
     MaxHealth = 100.0f;
@@ -42,20 +42,20 @@ AHeroCharacter::AHeroCharacter()
     CurrentMana = MaxMana;
 }
 
-void AHeroCharacter::BeginPlay()
+void AMainCharacter::BeginPlay()
 {
     Super::BeginPlay();
-    // Na starcie upewniamy siê, ¿e zdrowie jest pe³ne
+    // Na starcie upewniamy siï¿½, ï¿½e zdrowie jest peï¿½ne
     CurrentHealth = MaxHealth;
 }
 
-void AHeroCharacter::Tick(float DeltaTime)
+void AMainCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 }
 
-void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-    // Tu bêdziemy dodawaæ sterowanie w kolejnym kroku!
+    // Tu bï¿½dziemy dodawaï¿½ sterowanie w kolejnym kroku!
 }

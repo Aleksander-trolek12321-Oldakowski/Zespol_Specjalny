@@ -2,31 +2,31 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "HeroCharacter.generated.h"
+#include "MainCharacter.generated.h"
 
 UCLASS()
-class ENDLESSSHOOTER_API AHeroCharacter : public ACharacter
+class ZESPOL_SPECJALNY_API AMainCharacter : public ACharacter
 {
     GENERATED_BODY()
 
 public:
-    // Konstruktor - tu ustawiamy wartoœci domyœlne
-    AHeroCharacter();
+    // Konstruktor - tu ustawiamy wartoï¿½ci domyï¿½lne
+    AMainCharacter();
 
 protected:
-    // Funkcja wywo³ywana, gdy gra startuje
+    // Funkcja wywoï¿½ywana, gdy gra startuje
     virtual void BeginPlay() override;
 
 public:
-    // Funkcja wywo³ywana w ka¿dej klatce gry (np. 60 razy na sekundê)
+    // Funkcja wywoï¿½ywana w kaï¿½dej klatce gry (np. 60 razy na sekundï¿½)
     virtual void Tick(float DeltaTime) override;
 
-    // Funkcja do wi¹zania klawiszy (wyjaœnimy to przy ruchu)
+    // Funkcja do wiï¿½zania klawiszy (wyjaï¿½nimy to przy ruchu)
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-    // --- KOMPONENTY (Co postaæ posiada fizycznie) ---
+    // --- KOMPONENTY (Co postaï¿½ posiada fizycznie) ---
 
-    // SpringArm to "wysiêgnik" trzymaj¹cy kamerê (¿eby nie przenika³a przez œciany)
+    // SpringArm to "wysiï¿½gnik" trzymajï¿½cy kamerï¿½ (ï¿½eby nie przenikaï¿½a przez ï¿½ciany)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
     class USpringArmComponent* CameraBoom;
 
@@ -36,8 +36,8 @@ public:
 
     // --- STATYSTYKI (Zgodnie z wymaganiami) ---
 
-    // Makro EditAnywhere pozwala edytowaæ te wartoœci w edytorze Unreal
-    // BlueprintReadWrite pozwala Blueprintom (np. paskowi zdrowia) widzieæ tê zmienn¹
+    // Makro EditAnywhere pozwala edytowaï¿½ te wartoï¿½ci w edytorze Unreal
+    // BlueprintReadWrite pozwala Blueprintom (np. paskowi zdrowia) widzieï¿½ tï¿½ zmiennï¿½
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
     float MaxHealth;
@@ -46,7 +46,7 @@ public:
     float CurrentHealth;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-    float MaxMana; // Nasz "zasób"
+    float MaxMana; // Nasz "zasï¿½b"
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
     float CurrentMana;
