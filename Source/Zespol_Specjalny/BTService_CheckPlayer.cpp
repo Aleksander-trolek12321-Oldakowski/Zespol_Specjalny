@@ -50,7 +50,7 @@ void UBTService_CheckPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
     BB->SetValueAsBool(FName(TEXT("HasLOS")), bHasLOS);
 
     float Dist = FVector::Dist(AIPawn->GetActorLocation(), PlayerPawn->GetActorLocation());
-    float AttackRange = 200.f;
+    float AttackRange = 300.f;
     AEnemyBase* Enemy = Cast<AEnemyBase>(AIPawn);
     if (Enemy)
     {
