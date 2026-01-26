@@ -8,6 +8,8 @@ class UAttributesComponent;
 class UStaticMeshComponent;
 class UWidgetComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeathSignature, AEnemyBase*, Enemy);
+
 UCLASS(Blueprintable)
 class ZESPOL_SPECJALNY_API AEnemyBase : public ACharacter
 {
@@ -46,9 +48,25 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UI")
     void UpdateHPWidget();
 
-    UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Combat")
-    void OnDeath();
+    UFUNCTION(BlueprintCallable, Category = "Combat")
+    virtual void Die();
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat")
+    void OnDeathBP();
+    virtual void OnDeathBP_Implementation();
+
+    UPROPERTY(BlueprintAssignable, Category = "Events")
+    FOnEnemyDeathSignature OnEnemyDeath;
 
 protected:
     bool bIsDead;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+    UAnimMontage* DeathMontage;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+    float LifeSpanAfterDeath = 5.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+    UParticleSystem* DeathVFX;
 };
