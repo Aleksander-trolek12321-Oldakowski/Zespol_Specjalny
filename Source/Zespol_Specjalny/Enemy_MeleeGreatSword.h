@@ -25,6 +25,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void StartHitWindow();
 
+    virtual void Die() override;
+
 protected:
     void ResetAttack();
 

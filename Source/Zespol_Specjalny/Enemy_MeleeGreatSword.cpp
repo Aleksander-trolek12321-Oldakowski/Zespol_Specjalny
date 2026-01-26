@@ -120,3 +120,8 @@ void AEnemy_MeleeGreatSword::ResetAttack()
     bCanAttack = true;
     bHasDealtHit = false;
 }
+
+void AEnemy_MeleeGreatSword::Die()
+{
+    Super::Die();
+}

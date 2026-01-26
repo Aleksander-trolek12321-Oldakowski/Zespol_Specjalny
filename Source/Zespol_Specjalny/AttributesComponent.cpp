@@ -1,4 +1,5 @@
 #include "AttributesComponent.h"
+#include "EnemyBase.h"
 
 UAttributesComponent::UAttributesComponent()
 {
@@ -22,6 +23,20 @@ float UAttributesComponent::ApplyDamage(float Amount)
 {
     CurrentHP -= Amount;
     CurrentHP = FMath::Clamp(CurrentHP, 0.f, MaxHP);
+
+    if (CurrentHP <= 0.f)
+    {
+        AActor* Owner = GetOwner();
+        if (Owner)
+        {
+            AEnemyBase* Enemy = Cast<AEnemyBase>(Owner);
+            if (Enemy)
+            {
+                Enemy->Die();
+            }
+        }
+    }
+
     return CurrentHP;
 }
 
