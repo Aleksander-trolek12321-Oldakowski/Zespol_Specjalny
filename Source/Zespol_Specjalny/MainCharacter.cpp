@@ -3,6 +3,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/WidgetComponent.h"
 
 // Konstruktor
 AMainCharacter::AMainCharacter()
@@ -40,6 +41,25 @@ AMainCharacter::AMainCharacter()
     CurrentHealth = MaxHealth;
     MaxMana = 50.0f;
     CurrentMana = MaxMana;
+
+	// 5. Tworzenie komponentu Widget (pasek zdrowia nad g��ow�)
+    // Create the Component
+    HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+
+    // Attach it to the Root (so it follows the player)
+    HealthWidgetComp->SetupAttachment(RootComponent);
+
+    // Set where it sits relative to the player 
+    // (Z=120 usually puts it just above a standard human head)
+    HealthWidgetComp->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
+
+    // Set the mode to "Screen" so it always faces the camera (classic RPG style)
+    // If you want it flat in the world, use EWidgetSpace::World
+    HealthWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+
+    // Set the size of the draw area
+    HealthWidgetComp->SetDrawSize(FVector2D(100.0f, 15.0f));
+
 }
 
 void AMainCharacter::BeginPlay()
