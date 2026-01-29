@@ -34,6 +34,20 @@ AEnemyBase::AEnemyBase()
 	Attributes->CurrentHP = 100.f;
 
     GetCharacterMovement()->bOrientRotationToMovement = true;
+
+    bUseControllerRotationYaw = false;
+    if (GetCharacterMovement())
+    {
+        GetCharacterMovement()->bOrientRotationToMovement = false;
+    }
+
+    if (GetMesh())
+    {
+        GetMesh()->SetRelativeRotation(FRotator::ZeroRotator);
+    }
+
+    CurrentTarget = nullptr;
+    RotationSpeed = 10.f;
 }
 
 void AEnemyBase::BeginPlay()
@@ -56,6 +70,19 @@ void AEnemyBase::BeginPlay()
 void AEnemyBase::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    if (!CurrentTarget) return;
+
+    FVector ToTarget = CurrentTarget->GetActorLocation() - GetActorLocation();
+    ToTarget.Z = 0.f;
+    if (ToTarget.IsNearlyZero()) return;
+
+    FRotator DesiredRot = ToTarget.Rotation();
+    DesiredRot.Pitch = 0.f;
+    DesiredRot.Roll = 0.f;
+
+    FRotator NewRot = FMath::RInterpTo(GetActorRotation(), DesiredRot, DeltaTime, RotationSpeed);
+    SetActorRotation(NewRot);
 }
 
 float AEnemyBase::GetHPPercent() const

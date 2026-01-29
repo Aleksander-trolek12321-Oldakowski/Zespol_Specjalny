@@ -4,6 +4,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 // Konstruktor
 AMainCharacter::AMainCharacter()
@@ -78,4 +80,24 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
     // Tu b�dziemy dodawa� sterowanie w kolejnym kroku!
+}
+
+float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+    const float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+    if (ActualDamage <= 0.f) return 0.f;
+
+    CurrentHealth = FMath::Clamp(CurrentHealth - ActualDamage, 0.f, MaxHealth);
+
+    UE_LOG(LogTemp, Log, TEXT("%s otrzymal %f obrazen. HP: %f/%f"), *GetName(), ActualDamage, CurrentHealth, MaxHealth);
+
+
+    if (CurrentHealth <= 0.f)
+    {
+
+        return ActualDamage;
+    }
+
+    return ActualDamage;
 }

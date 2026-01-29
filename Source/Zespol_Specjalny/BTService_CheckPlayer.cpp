@@ -26,6 +26,10 @@ void UBTService_CheckPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
     if (!AIPawn) return;
 
     APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(AIPawn->GetWorld(), 0);
+    if (AEnemyBase* Enemy = Cast<AEnemyBase>(AIPawn))
+    {
+        Enemy->CurrentTarget = PlayerPawn;
+    }
     if (!PlayerPawn)
     {
         BB->SetValueAsObject(FName(TEXT("TargetActor")), nullptr);

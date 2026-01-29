@@ -58,6 +58,12 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Events")
     FOnEnemyDeathSignature OnEnemyDeath;
 
+    UPROPERTY(BlueprintReadWrite, Category="AI")
+    AActor* CurrentTarget = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI")
+    float RotationSpeed = 10.f;
+
 protected:
     bool bIsDead;
 
