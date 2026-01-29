@@ -9,10 +9,10 @@ void UAnimNotifyState_WeaponHit::NotifyBegin(USkeletalMeshComponent* MeshComp, U
     AActor* Owner = MeshComp->GetOwner();
     if (!Owner) return;
 
-    AEnemy_MeleeGreatSword* Enemy = Cast<AEnemy_MeleeGreatSword>(Owner);
-    if (Enemy)
+    if (AEnemy_MeleeGreatSword* Enemy = Cast<AEnemy_MeleeGreatSword>(Owner))
     {
-        Enemy->StartHitWindow();
+        Enemy->ClearAlreadyHitActors();
+        Enemy->EnableSwordHitbox();
     }
 }
 
@@ -35,9 +35,9 @@ void UAnimNotifyState_WeaponHit::NotifyEnd(USkeletalMeshComponent* MeshComp, UAn
     AActor* Owner = MeshComp->GetOwner();
     if (!Owner) return;
 
-    AEnemy_MeleeGreatSword* Enemy = Cast<AEnemy_MeleeGreatSword>(Owner);
-    if (Enemy)
+    if (AEnemy_MeleeGreatSword* Enemy = Cast<AEnemy_MeleeGreatSword>(Owner))
     {
-        Enemy->StartHitWindow();
+        Enemy->DisableSwordHitbox();
+        Enemy->ClearAlreadyHitActors();
     }
 }

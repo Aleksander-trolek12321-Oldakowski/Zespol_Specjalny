@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "EnemyBase.h"
+#include "Components/BoxComponent.h"
 #include "Enemy_MeleeGreatSword.generated.h"
 
 class UAnimMontage;
@@ -16,6 +17,8 @@ public:
 
     virtual void BeginPlay() override;
 
+    virtual void Tick(float DeltaTime) override;
+
     UFUNCTION(BlueprintCallable, Category = "Combat")
     void StartAttack();
 
@@ -25,10 +28,25 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void StartHitWindow();
 
+    UFUNCTION()
+    void OnSwordOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
     virtual void Die() override;
+
+    UFUNCTION(BlueprintCallable, Category="Combat")
+    void EnableSwordHitbox();
+
+    UFUNCTION(BlueprintCallable, Category="Combat")
+    void DisableSwordHitbox();
+
+    UFUNCTION(BlueprintCallable, Category="Combat")
+    void ClearAlreadyHitActors();
 
 protected:
     void ResetAttack();
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
+    UBoxComponent* SwordHitBox;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
     UAnimMontage* AttackMontage;
@@ -45,8 +63,19 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
     float HitSphereRadius;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Debug")
+    bool bDrawSwordDebugBox;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+    FVector SwordHalfExtent = FVector(80.f, 3.f, 3.f);
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+    FRotator SwordRotationOffset = FRotator::ZeroRotator;
+
     bool bCanAttack;
     bool bHasDealtHit;
 
     FTimerHandle TimerHandle_ResetAttack;
+
+    TSet<TWeakObjectPtr<AActor>> AlreadyHitActors;
 };

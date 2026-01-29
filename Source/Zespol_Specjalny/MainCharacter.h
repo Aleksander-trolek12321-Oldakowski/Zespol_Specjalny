@@ -54,4 +54,7 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
     class UWidgetComponent* HealthWidgetComp;
+
+    virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 };
