@@ -1,17 +1,13 @@
 #include "WaveManager.h"
-#include "EnemySpawner.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
+#include "SpawnPoint.h"
 #include "EngineUtils.h"
+#include "TimerManager.h"
+#include "Engine/World.h"
 
 AWaveManager::AWaveManager()
 {
     PrimaryActorTick.bCanEverTick = false;
-    BaseEnemiesPerWave = 10;
-    BaseTimeBetweenWaves = 15.f;
-    HealthMultiplierPerWave = 1.15f;
-    SpawnIntervalMultiplierPerWave = 0.95f;
-    CurrentWave = 0;
+    WaveIndex = 0;
     bRunning = false;
 }
 
@@ -19,12 +15,30 @@ void AWaveManager::BeginPlay()
 {
     Super::BeginPlay();
 
-    if (Spawners.Num() == 0)
+    for (TActorIterator<ASpawnPoint> It(GetWorld()); It; ++It)
     {
-        for (TActorIterator<AEnemySpawner> It(GetWorld()); It; ++It)
+        ASpawnPoint* SP = *It;
+        if (SP)
         {
-            Spawners.Add(*It);
+            Spawners.Add(SP);
         }
+    }
+
+    StartWaves();
+}
+
+void AWaveManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    StopWaves();
+    Super::EndPlay(EndPlayReason);
+}
+
+void AWaveManager::RegisterSpawner(ASpawnPoint* Spawner)
+{
+    if (!Spawner) return;
+    if (!Spawners.Contains(Spawner))
+    {
+        Spawners.Add(Spawner);
     }
 }
 
@@ -32,40 +46,36 @@ void AWaveManager::StartWaves()
 {
     if (bRunning) return;
     bRunning = true;
-    CurrentWave = 0;
-    CurrentHealthMultiplier = 1.0f;
-    CurrentSpawnInterval = 1.0f;
+    WaveIndex = 0;
 
-    StartNextWave();
+    GetWorld()->GetTimerManager().SetTimer(TimerHandle_NextWave, this, &AWaveManager::TickWave, TimeBeforeStart, false);
 }
 
 void AWaveManager::StopWaves()
 {
     bRunning = false;
-    GetWorldTimerManager().ClearTimer(TimerHandle_NextWave);
+    GetWorld()->GetTimerManager().ClearTimer(TimerHandle_NextWave);
 }
 
-void AWaveManager::StartNextWave()
+void AWaveManager::TickWave()
 {
     if (!bRunning) return;
 
-    CurrentWave++;
+    WaveIndex++;
+    OnWaveStarted.Broadcast(WaveIndex);
 
-    CurrentHealthMultiplier = FMath::Pow(HealthMultiplierPerWave, CurrentWave - 1);
+    float HealthMultiplier = FMath::Pow(HealthMultiplierPerWave, WaveIndex - 1);
+    float SpawnIntervalMultiplier = FMath::Pow(SpawnIntervalMultiplierPerWave, WaveIndex - 1);
 
-    float spawnInterval = 1.0f * FMath::Pow(SpawnIntervalMultiplierPerWave, CurrentWave - 1);
+    int32 AdditionalPerWave = FMath::FloorToInt(static_cast<float>(AdditionalEnemiesPerWave) * static_cast<float>(WaveIndex - 1));
 
-    int32 totalEnemies = BaseEnemiesPerWave + (CurrentWave - 1) * 2;
-
-    int32 perSpawner = FMath::Max(1, totalEnemies / FMath::Max(1, Spawners.Num()));
-
-    for (AEnemySpawner* S : Spawners)
+    for (ASpawnPoint* SP : Spawners)
     {
-        if (!S) continue;
-        S->StartSpawningWave(perSpawner, spawnInterval, CurrentHealthMultiplier);
+        if (!SP) continue;
+        SP->AdjustForDifficulty(HealthMultiplier, SpawnIntervalMultiplier, AdditionalPerWave);
+        SP->SpawnEnemies();
     }
 
-    float timeToNext = FMath::Max(3.f, BaseTimeBetweenWaves * FMath::Pow(0.98f, CurrentWave - 1));
-
-    GetWorldTimerManager().SetTimer(TimerHandle_NextWave, this, &AWaveManager::StartNextWave, timeToNext, false);
+    float IntervalNext = TimeBetweenWaves * SpawnIntervalMultiplier;
+    GetWorld()->GetTimerManager().SetTimer(TimerHandle_NextWave, this, &AWaveManager::TickWave, IntervalNext, false);
 }
