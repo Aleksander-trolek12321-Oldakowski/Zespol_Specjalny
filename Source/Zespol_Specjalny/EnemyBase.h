@@ -7,6 +7,7 @@
 class UAttributesComponent;
 class UStaticMeshComponent;
 class UWidgetComponent;
+class UBehaviorTree;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeathSignature, AEnemyBase*, Enemy);
 
@@ -63,6 +64,9 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI")
     float RotationSpeed = 10.f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "AI")
+    UBehaviorTree* EnemyBehaviorTree;
 
 protected:
     bool bIsDead;
