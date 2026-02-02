@@ -92,12 +92,39 @@ void AEnemy_MeleeGreatSword::BeginPlay()
         DrawDebugBox(GetWorld(), T.GetLocation(), SwordHitBox->GetUnscaledBoxExtent(), T.GetRotation(), FColor::Red, false, 5.f, 0, 2.f);
     }
 
+    if (HPWidgetComponent)
+    {
+        HPWidgetComponent->SetHiddenInGame(false);
+        HPWidgetComponent->SetVisibility(true);
+
+        HPWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+        HPWidgetComponent->SetDrawSize(FVector2D(120.f, 20.f));
+
+        UUserWidget* W = HPWidgetComponent->GetUserWidgetObject();
+        if (!W)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("%s: HPWidgetComponent istnieje, ale nie ma UserWidget (brak przypisanej Widget Class lub nie utworzono instancji). Sprawdź BP przeciwnika."), *GetName());
+        }
+        else
+        {
+            UE_LOG(LogTemp, Log, TEXT("%s: HPWidgetComponent instance found: %s — wywołuję UpdateHPWidget()"), *GetName(), *W->GetName());
+            UpdateHPWidget();
+        }
+
+        HPWidgetComponent->SetOwnerNoSee(false);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("%s: Brak HPWidgetComponent (powinien być zadeklarowany w EnemyBase)."), *GetName());
+    }
+
     AlreadyHitActors.Empty();
 }
 
 void AEnemy_MeleeGreatSword::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+    UpdateHPWidget();
 }
 
 void AEnemy_MeleeGreatSword::StartHitWindow()

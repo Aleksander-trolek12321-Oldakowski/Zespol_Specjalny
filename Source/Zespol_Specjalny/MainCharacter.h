@@ -57,4 +57,17 @@ public:
 
     virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+    UFUNCTION(BlueprintCallable, Category="Health")
+    void Die();
+
+    UFUNCTION(BlueprintCallable, Category="Health")
+    bool IsDead() const { return bIsDead; }
+
+protected:
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Health")
+    bool bIsDead = false;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Animation")
+    class UAnimMontage* DeathMontage;
+
 };

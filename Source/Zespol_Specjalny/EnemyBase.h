@@ -68,6 +68,9 @@ public:
     UPROPERTY(EditDefaultsOnly, Category = "AI")
     UBehaviorTree* EnemyBehaviorTree;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Gameplay")
+    int32 ScoreValue = 10;   
+
 protected:
     bool bIsDead;
 

@@ -37,8 +37,13 @@ public:
     UFUNCTION(BlueprintCallable, Category="Spawn")
     void AdjustForDifficulty(float HealthMultiplier, float SpawnIntervalMultiplier, int32 AdditionalPerWave);
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn")
+    TArray<TSubclassOf<AEnemyBase>> SpawnableEnemies;
+
 protected:
     float CurrentSpawnInterval;
     float CurrentHealthMultiplier = 1.f;
     int32 CurrentAdditionalPerWave = 0;
+
+    TSubclassOf<AEnemyBase> ChooseEnemyClassToSpawn() const;
 };

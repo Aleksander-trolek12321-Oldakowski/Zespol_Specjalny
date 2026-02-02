@@ -1,9 +1,10 @@
 #include "MainCharacter.h"
-// Musimy do��czy� nag��wki komponent�w, kt�rych u�ywamy
+#include "GMB_TopDown.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -100,4 +101,48 @@ float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
     }
 
     return ActualDamage;
+}
+
+void AMainCharacter::Die()
+{
+    if (bIsDead) return;
+    bIsDead = true;
+
+    APlayerController* PC = Cast<APlayerController>(GetController());
+    if (PC)
+    {
+        PC->SetIgnoreMoveInput(true);
+        PC->SetIgnoreLookInput(true);
+        PC->bShowMouseCursor = true;
+    }
+
+    if (GetCharacterMovement())
+    {
+        GetCharacterMovement()->DisableMovement();
+        GetCharacterMovement()->StopMovementImmediately();
+    }
+    GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    if (DeathMontage && GetMesh())
+    {
+        UAnimInstance* AnimInst = GetMesh()->GetAnimInstance();
+        if (AnimInst)
+        {
+            AnimInst->Montage_Play(DeathMontage);
+        }
+    }
+
+    UWorld* W = GetWorld();
+    if (W)
+    {
+        if (AGMB_TopDown* GM = Cast<AGMB_TopDown>(UGameplayStatics::GetGameMode(this)))
+        {
+            GM->EndGame(false);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("MainCharacter::Die - Could not cast GameMode to AGMB_TopDown"));
+        }
+    }
+
 }
