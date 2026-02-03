@@ -10,6 +10,7 @@
 #include "Animation/AnimInstance.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "GMB_TopDown.h"
 
 AEnemyBase::AEnemyBase()
 {
@@ -150,6 +151,13 @@ void AEnemyBase::Die()
     if (DeathVFX)
     {
         UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathVFX, GetActorLocation(), GetActorRotation());
+    }
+
+    OnEnemyDeath.Broadcast(this);
+
+    if (AGMB_TopDown* GM = Cast<AGMB_TopDown>(UGameplayStatics::GetGameMode(this)))
+    {
+        GM->AddScore(ScoreValue);
     }
 
     OnDeathBP();
