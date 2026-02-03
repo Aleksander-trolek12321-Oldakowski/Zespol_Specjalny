@@ -94,10 +94,9 @@ float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
     UE_LOG(LogTemp, Log, TEXT("%s otrzymal %f obrazen. HP: %f/%f"), *GetName(), ActualDamage, CurrentHealth, MaxHealth);
 
 
-    if (CurrentHealth <= 0.f)
+    if (CurrentHealth <= 0.f && !bIsDead)
     {
-
-        return ActualDamage;
+        Die();
     }
 
     return ActualDamage;
