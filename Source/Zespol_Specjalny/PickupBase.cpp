@@ -1,52 +1,57 @@
 #include "PickupBase.h"
-#include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
-#include "GameFramework/Pawn.h"
+#include "Components/StaticMeshComponent.h"
+#include "MainCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 APickupBase::APickupBase()
 {
     PrimaryActorTick.bCanEverTick = false;
 
-    MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
-    RootComponent = MeshComp;
-    MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    MeshComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+    CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
+    CollisionComp->InitSphereRadius(40.f);
+    CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    CollisionComp->SetCollisionObjectType(ECC_WorldDynamic);
+    CollisionComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+    CollisionComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+    CollisionComp->SetGenerateOverlapEvents(true);
+    RootComponent = CollisionComp;
 
-    Trigger = CreateDefaultSubobject<USphereComponent>(TEXT("Trigger"));
-    Trigger->SetupAttachment(RootComponent);
-    Trigger->SetSphereRadius(50.f);
-    Trigger->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    Trigger->SetCollisionResponseToAllChannels(ECR_Ignore);
-    Trigger->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+    Visual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Visual"));
+    Visual->SetupAttachment(RootComponent);
+    Visual->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &APickupBase::OnOverlapBegin);
 }
 
 void APickupBase::BeginPlay()
 {
     Super::BeginPlay();
-    if (Trigger)
-    {
-        Trigger->OnComponentBeginOverlap.AddDynamic(this, &APickupBase::OnOverlapBegin);
-    }
 }
 
 void APickupBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-                                UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-                                const FHitResult& SweepResult)
+                                 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                 const FHitResult& SweepResult)
 {
     if (!OtherActor) return;
     APawn* Pawn = Cast<APawn>(OtherActor);
     if (!Pawn) return;
 
-    if (OnPicked(Pawn))
+    bool bHandled = OnPicked(Pawn);
+
+    if (bHandled)
     {
-        if (bDestroyOnPickup)
-        {
-            Destroy();
-        }
+        Destroy();
     }
 }
 
 bool APickupBase::OnPicked_Implementation(APawn* InstigatorPawn)
 {
+    AMainCharacter* Player = Cast<AMainCharacter>(InstigatorPawn);
+    if (Player)
+    {
+        Player->Heal(HealAmount);
+        return true;
+    }
     return false;
 }
