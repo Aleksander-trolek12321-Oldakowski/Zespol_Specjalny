@@ -6,6 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "TopDownPlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
 // Konstruktor
@@ -68,8 +69,25 @@ AMainCharacter::AMainCharacter()
 void AMainCharacter::BeginPlay()
 {
     Super::BeginPlay();
-    // Na starcie upewniamy si�, �e zdrowie jest pe�ne
+
     CurrentHealth = MaxHealth;
+
+    if (APlayerController* PC = Cast<APlayerController>(GetController()))
+    {
+        if (ATopDownPlayerState* PS = Cast<ATopDownPlayerState>(PC->PlayerState))
+        {
+            if (PS->BonusMaxHealth != 0.f)
+            {
+                MaxHealth += PS->BonusMaxHealth;
+                CurrentHealth = FMath::Clamp(CurrentHealth, 0.f, MaxHealth);
+            }
+
+            // Ammunition capacity handling: np. jeśli posiadasz komponent broni,
+            // powiększ jego capacity o PS->BonusAmmoCapacity.
+            // Przykład (załóżmy, że masz metodę UpgradeAmmoCapacity(int)):
+            // MyWeapon->UpgradeAmmoCapacity(PS->BonusAmmoCapacity);
+        }
+    }
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -93,13 +111,53 @@ float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 
     UE_LOG(LogTemp, Log, TEXT("%s otrzymal %f obrazen. HP: %f/%f"), *GetName(), ActualDamage, CurrentHealth, MaxHealth);
 
+    if (HealthWidgetComp)
+    {
+        UUserWidget* W = Cast<UUserWidget>(HealthWidgetComp->GetUserWidgetObject());
+        if (W)
+        {
+            UFunction* Func = W->FindFunction(FName("SetHealthPercent"));
+            if (Func)
+            {
+                struct FFloatParam { float Percent; };
+                FFloatParam Params;
+                Params.Percent = (MaxHealth > 0.f) ? (CurrentHealth / MaxHealth) : 0.f;
+                W->ProcessEvent(Func, &Params);
+            }
+        }
+    }
 
-    if (CurrentHealth <= 0.f && !bIsDead)
+    if (CurrentHealth <= 0.f)
     {
         Die();
     }
 
     return ActualDamage;
+}
+
+void AMainCharacter::Heal(float Amount)
+{
+    if (Amount <= 0.f) return;
+
+    CurrentHealth = FMath::Clamp(CurrentHealth + Amount, 0.f, MaxHealth);
+
+    UE_LOG(LogTemp, Log, TEXT("%s healed by %f. HP: %f/%f"), *GetName(), Amount, CurrentHealth, MaxHealth);
+
+    if (HealthWidgetComp)
+    {
+        UUserWidget* W = Cast<UUserWidget>(HealthWidgetComp->GetUserWidgetObject());
+        if (W)
+        {
+            UFunction* Func = W->FindFunction(FName("SetHealthPercent"));
+            if (Func)
+            {
+                struct FFloatParam { float Percent; };
+                FFloatParam Params;
+                Params.Percent = (MaxHealth > 0.f) ? (CurrentHealth / MaxHealth) : 0.f;
+                W->ProcessEvent(Func, &Params);
+            }
+        }
+    }
 }
 
 void AMainCharacter::Die()

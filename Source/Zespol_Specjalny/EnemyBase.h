@@ -2,12 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/Actor.h" 
 #include "EnemyBase.generated.h"
 
 class UAttributesComponent;
 class UStaticMeshComponent;
 class UWidgetComponent;
 class UBehaviorTree;
+class APickupBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeathSignature, AEnemyBase*, Enemy);
 
@@ -69,7 +71,19 @@ public:
     UBehaviorTree* EnemyBehaviorTree;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Gameplay")
-    int32 ScoreValue = 10;   
+    int32 ScoreValue = 10;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drops")
+    TArray<TSubclassOf<AActor>> DropTable;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Drops")
+    float DropChance = 0.25f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drops")
+    float DropSpawnZOffset = 40.f;
+
+    UFUNCTION(BlueprintCallable, Category = "Drops")
+    void TryDropLoot();
 
 protected:
     bool bIsDead;
