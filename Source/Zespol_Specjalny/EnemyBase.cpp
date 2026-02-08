@@ -8,7 +8,9 @@
 #include "BrainComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimInstance.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Engine/World.h"
+#include "PickupBase.h"
 #include "DrawDebugHelpers.h"
 #include "GMB_TopDown.h"
 
@@ -102,6 +104,35 @@ void AEnemyBase::UpdateHPWidget()
     if (!W) return;
 }
 
+void AEnemyBase::TryDropLoot()
+{
+    if (!GetWorld()) return;
+
+    if (DropTable.Num() == 0) return;
+
+    if (FMath::FRand() > DropChance) return;
+
+    int32 Idx = FMath::RandRange(0, DropTable.Num() - 1);
+    TSubclassOf<AActor> PickClass = DropTable[Idx];
+    if (!PickClass) return;
+
+    FVector Loc = GetActorLocation() + FVector(0.f, 0.f, DropSpawnZOffset);
+    FRotator Rot = FRotator::ZeroRotator;
+
+    FActorSpawnParameters Params;
+    Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+    Params.Owner = this;
+
+    AActor* Spawned = GetWorld()->SpawnActor<AActor>(PickClass, Loc, Rot, Params);
+    if (!Spawned)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("%s: TryDropLoot - failed to spawn %s"), *GetName(), *PickClass->GetName());
+        return;
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("%s: Dropped loot %s"), *GetName(), *Spawned->GetName());
+}
+
 void AEnemyBase::Die()
 {
     if (bIsDead) return;
@@ -161,6 +192,8 @@ void AEnemyBase::Die()
     }
 
     OnDeathBP();
+
+    TryDropLoot();
 
     SetLifeSpan(LifeSpanAfterDeath);
 }
