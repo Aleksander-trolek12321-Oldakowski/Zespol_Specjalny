@@ -1,0 +1,107 @@
+{
+	"assetNamespace": "fab",
+	"listing":
+	{
+		"averageRating": 0,
+		"createdAt": "",
+		"description": "<p>Garden Fence, on low ploy \nIf you have any questions, comments or errors, please let me know in order to correct them. \nBest regards \nKoceila</p>",
+		"isAiForbidden": false,
+		"isAiGenerated": false,
+		"lastUpdatedAt": "",
+		"listingType": "3d-model",
+		"media": "https://media.fab.com/image_previews/gallery_images/ec0fff95-55af-4b6a-a583-fac49ac3662d/2c48f69e-5ff2-435d-a8c8-fb2e65d018da.jpeg",
+		"publishedAt": "2024-11-08T23:06:26.033889Z",
+		"reviewCount": 0,
+		"thumbnail": "https://media.fab.com/image_previews/gallery_images/ca61661d-a4e3-4a37-838d-9a71399d58d0/b23bc1b8-ec50-41ef-a126-b500d28b1b8b.jpeg",
+		"title": "Garden Fences (Wood)",
+		"uid": "9264aeeb-278a-4687-9a91-891cc72a6622",
+		"updatedAt": "",
+		"user":
+		{
+			"coverImageUrl": "https://cdn1.epicgames.com/fab/seller/o-zpc5ecbyx47jajk9m66ustg3952ysk/backgroundImage/blob-1920x540-be4ca606248d850162b28c54c63982f1.jpg",
+			"profileImageUrl": "https://cdn1.epicgames.com/fab/seller/o-zpc5ecbyx47jajk9m66ustg3952ysk/profileImage/blob-500x500-fb707f5e191951569c855dc4c2632d1a.jpg",
+			"sellerName": "Koceila HAID",
+			"uid": "d12f3c61-235a-4176-aafe-1869613cfeef"
+		},
+		"tags": [
+			{
+				"name": "Garden",
+				"slug": "garden",
+				"uid": "1f405a73-7135-4e7d-a7b2-61e5c33faebf"
+			},
+			{
+				"name": "Lowpoly",
+				"slug": "lowpoly",
+				"uid": "451806dc-649e-43b7-9c2e-a54485de14b6"
+			},
+			{
+				"name": "Medieval",
+				"slug": "medieval",
+				"uid": "8869d28f-20ec-4f2e-9e92-d505e24c701d"
+			},
+			{
+				"name": "Wood",
+				"slug": "wood",
+				"uid": "bcd38165-4b32-484d-bce7-c6cdaf827f77"
+			},
+			{
+				"name": "Fence",
+				"slug": "fence",
+				"uid": "dcb71319-e675-43bc-84e7-66abd8bbe63f"
+			}
+		],
+		"category":
+		{
+			"name": "Budowle i architektura",
+			"path": "buildings-architecture",
+			"slug": "buildings-architecture",
+			"uid": "eec3bdd5-ba7a-45a8-b15d-67462b9630f6"
+		},
+		"assetFormats": [
+			{
+				"assetFormatType":
+				{
+					"name": "FBX",
+					"groupName": "Formaty wymiany 3D",
+					"code": "fbx",
+					"icon": "cube",
+					"extensions": [
+						"fbx"
+					]
+				}
+			},
+			{
+				"assetFormatType":
+				{
+					"name": "Skonwertowane pliki",
+					"groupName": "",
+					"code": "converted-files",
+					"icon": "cube",
+					"extensions": [
+						"gltf",
+						"glb",
+						"usdz"
+					]
+				}
+			}
+		],
+		"_PluginMetas":
+		{
+			"apiDataVersion": "0.0.1",
+			"entitlementUid": "b5811e33-adcc-45a4-a494-0fdd45745684",
+			"cacheSize": 0,
+			"downloaded": []
+		}
+	},
+	"target": "",
+	"quality": "",
+	"format": "fbx",
+	"fileId": "03eecb54-d86d-4f5f-ab37-725f906c439c",
+	"platformIncluded": "",
+	"distributionPointBaseUrls": [],
+	"distributionMethod": "",
+	"entitlementUid": "b5811e33-adcc-45a4-a494-0fdd45745684",
+	"invertedNormal": false,
+	"isConverted": false,
+	"isQuixel": false
+}
