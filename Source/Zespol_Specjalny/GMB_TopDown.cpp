@@ -1,22 +1,74 @@
 #include "GMB_TopDown.h"
 #include "Kismet/GameplayStatics.h"
-#include "Blueprint/UserWidget.h"
-#include "MainCharacter.h"
-#include "EngineUtils.h"
+#include "Engine/World.h"
+#include "Engine/Engine.h"
+#include "EndGameWidget.h"
+#include "GameHUDWidget.h"
 #include "WaveManager.h"
 #include "SpawnPoint.h"
 #include "GameFramework/PlayerController.h"
+#include "EngineUtils.h"
 
 AGMB_TopDown::AGMB_TopDown()
 {
     CurrentScore = 0;
+    ElapsedTime = 0.f;
+    InGameWidgetInstance = nullptr;
     EndScreenWidgetInstance = nullptr;
+
+    PrimaryActorTick.bCanEverTick = true;
+}
+
+void AGMB_TopDown::BeginPlay()
+{
+    Super::BeginPlay();
+
+    UWorld* W = GetWorld();
+    if (W && InGameWidgetClass)
+    {
+        InGameWidgetInstance = CreateWidget<UGameHUDWidget>(W, InGameWidgetClass);
+        if (InGameWidgetInstance)
+        {
+            InGameWidgetInstance->AddToViewport();
+            InGameWidgetInstance->SetScore(CurrentScore);
+            InGameWidgetInstance->SetTimeSeconds(ElapsedTime);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("GMB_TopDown::BeginPlay - failed to create InGameWidgetInstance"));
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Verbose, TEXT("GMB_TopDown::BeginPlay - InGameWidgetClass not set or World is null"));
+    }
+}
+
+void AGMB_TopDown::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+
+    UWorld* W = GetWorld();
+    if (W && !W->IsPaused())
+    {
+        ElapsedTime += DeltaSeconds;
+        if (InGameWidgetInstance)
+        {
+            InGameWidgetInstance->SetTimeSeconds(ElapsedTime);
+        }
+    }
 }
 
 void AGMB_TopDown::AddScore(int32 Amount)
 {
     CurrentScore += Amount;
+    OnScoreChanged.Broadcast(CurrentScore);
     UE_LOG(LogTemp, Log, TEXT("Score: %d"), CurrentScore);
+
+    if (InGameWidgetInstance)
+    {
+        InGameWidgetInstance->SetScore(CurrentScore);
+    }
 }
 
 void AGMB_TopDown::EndGame(bool bPlayerWon)
@@ -48,8 +100,12 @@ void AGMB_TopDown::EndGame(bool bPlayerWon)
             UE_LOG(LogTemp, Log, TEXT("EndGame: Stopping Spawner %s"), *Sp->GetName());
             Sp->bEnabled = false;
             Sp->SetActorTickEnabled(false);
-            UE_LOG(LogTemp, Log, TEXT("GMB_TopDown: Disabled SpawnPoint %s"), *Sp->GetName());
         }
+    }
+    if (InGameWidgetInstance)
+    {
+        InGameWidgetInstance->RemoveFromParent();
+        InGameWidgetInstance = nullptr;
     }
 
     if (EndScreenWidgetClass)
@@ -62,24 +118,14 @@ void AGMB_TopDown::EndGame(bool bPlayerWon)
 
         APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
 
-        EndScreenWidgetInstance = CreateWidget<UUserWidget>(W, EndScreenWidgetClass);
+        EndScreenWidgetInstance = CreateWidget<UEndGameWidget>(W, EndScreenWidgetClass);
         if (EndScreenWidgetInstance)
         {
-            EndScreenWidgetInstance->AddToViewport(100);
+            EndScreenWidgetInstance->FinalScore = CurrentScore;
+            EndScreenWidgetInstance->SetFinalScore(CurrentScore);
 
-            UFunction* Func = EndScreenWidgetInstance->FindFunction(TEXT("SetFinalScore"));
-            if (Func)
-            {
-                struct FParms { int32 Score; };
-                FParms P;
-                P.Score = CurrentScore;
-                EndScreenWidgetInstance->ProcessEvent(Func, &P);
-                UE_LOG(LogTemp, Log, TEXT("EndGame: Called SetFinalScore(%d) on EndScreen widget."), CurrentScore);
-            }
-            else
-            {
-                UE_LOG(LogTemp, Log, TEXT("EndGame: EndScreen widget has no SetFinalScore function - ensure UMG exposes score some other way."));
-            }
+            EndScreenWidgetInstance->AddToViewport(100);
+            UE_LOG(LogTemp, Log, TEXT("EndGame: Created EndGameWidget with score %d"), CurrentScore);
 
             if (PC)
             {
@@ -97,7 +143,7 @@ void AGMB_TopDown::EndGame(bool bPlayerWon)
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("EndGame: EndScreenWidgetClass not set in GameMode. No end-screen will be shown."));
+        UE_LOG(LogTemp, Warning, TEXT("EndGame: EndScreenWidgetClass not set in GameMode."));
     }
 
     UGameplayStatics::SetGamePaused(W, true);

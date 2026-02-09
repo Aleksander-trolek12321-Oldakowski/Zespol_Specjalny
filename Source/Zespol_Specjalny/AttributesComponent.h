@@ -5,6 +5,8 @@
 #include "Components/ActorComponent.h"
 #include "AttributesComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, CurrentHP, float, MaxHP);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ZESPOL_SPECJALNY_API UAttributesComponent : public UActorComponent
 {

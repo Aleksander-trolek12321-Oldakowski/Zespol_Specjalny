@@ -92,7 +92,7 @@ protected:
     UAnimMontage* DeathMontage;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-    float LifeSpanAfterDeath = 5.f;
+    float LifeSpanAfterDeath = 1.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
     UParticleSystem* DeathVFX;

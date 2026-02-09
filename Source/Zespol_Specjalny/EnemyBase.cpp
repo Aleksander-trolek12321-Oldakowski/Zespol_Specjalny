@@ -33,8 +33,8 @@ AEnemyBase::AEnemyBase()
     HPWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
     HPWidgetComponent->SetDrawSize(FVector2D(120.f, 20.f));
 
-	Attributes->MaxHP = 100.f;
-	Attributes->CurrentHP = 100.f;
+	Attributes->MaxHP = 50.f;
+	Attributes->CurrentHP = 50.f;
 
     GetCharacterMovement()->bOrientRotationToMovement = true;
 
