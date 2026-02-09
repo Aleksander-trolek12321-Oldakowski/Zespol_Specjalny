@@ -25,7 +25,6 @@ void UMainMenuWidget::NativeConstruct()
 
 void UMainMenuWidget::OnNewGameClicked()
 {
-    UGameplayStatics::OpenLevel(this, FName(TEXT("GameplayMap")));
 }
 
 void UMainMenuWidget::OnOptionsClicked()
